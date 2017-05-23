@@ -1,0 +1,79 @@
+﻿@model HomeworX.Models.Exam
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Exam</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Appointment.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Appointment.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Appointment.Detail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Appointment.Detail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Appointment.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Appointment.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Appointment.Subject.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remind)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Remind)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Time)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mailadress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mailadress)
+        </dd>
+    </dl>
+    @foreach (var topicToAppointment in Model.Appointment.TopicToAppointment)
+    {
+        <div>
+            <dt>
+                @Html.DisplayNameFor(modelitem => topicToAppointment.Topic.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(modelitem => topicToAppointment.Topic.Description)
+            </dd>
+        </div>
+    }
+<p>
+    @Html.ActionLink("Edit", "Edit", new { uid = Model.UID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<HomeworX.Models.Exam>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Appointment.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Appointment.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
+        </th>
+    </tr>class
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Appointment.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Appointment.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Appointment.Subject.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new {  uid=item.UID}) |
+            @Html.ActionLink("Details", "Details", new { uid = item.UID }) |
+            @Html.ActionLink("Delete", "Delete", new { uid = item.UID })
+        </td>
+    </tr>
+}
+
+</table>
