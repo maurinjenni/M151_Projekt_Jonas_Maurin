@@ -195,6 +195,12 @@
     <Compile Include="Models\IRepository\IHomeworkRepository.cs" />
     <Compile Include="Models\IRepository\ISubjectRepository.cs" />
     <Compile Include="Models\IRepository\ITopicRepository.cs" />
+    <Compile Include="Models\Metadata\AppointmentMetadata.cs" />
+    <Compile Include="Models\Metadata\ExamMetadata.cs" />
+    <Compile Include="Models\Metadata\HomeworkMetadata.cs" />
+    <Compile Include="Models\Metadata\PartialClasses.cs" />
+    <Compile Include="Models\Metadata\SubjectMetadata.cs" />
+    <Compile Include="Models\Metadata\TopicMetadata.cs" />
     <Compile Include="Models\Model\IEntityUID.cs" />
     <Compile Include="Models\RepositoryContract\UnitOfWork.cs" />
     <Compile Include="Models\Repository\ExamRepository.cs" />
