@@ -26,10 +26,10 @@ namespace HomeworX.Models
         }
     
         public virtual DbSet<Appointment> Appointment { get; set; }
+        public virtual DbSet<Exam> Exam { get; set; }
+        public virtual DbSet<Homework> Homework { get; set; }
         public virtual DbSet<Subject> Subject { get; set; }
         public virtual DbSet<Topic> Topic { get; set; }
         public virtual DbSet<TopicToAppointment> TopicToAppointment { get; set; }
-        public virtual DbSet<Exam> Exam { get; set; }
-        public virtual DbSet<Homework> Homework { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace HomeworX.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Appointment()
         {
-            this.Exam = new HashSet<Exam>();
             this.TopicToAppointment = new HashSet<TopicToAppointment>();
         }
     
@@ -28,8 +27,7 @@ namespace HomeworX.Models
         public System.Guid SubjectUID { get; set; }
     
         public virtual Subject Subject { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Exam> Exam { get; set; }
+        public virtual Exam Exam { get; set; }
         public virtual Homework Homework { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TopicToAppointment> TopicToAppointment { get; set; }

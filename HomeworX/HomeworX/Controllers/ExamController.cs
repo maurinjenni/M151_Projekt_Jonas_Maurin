@@ -11,17 +11,17 @@ namespace HomeworX.Controllers
 {
     public class ExamController : Controller
     {
+        private UnitOfWork _uow;
+
         public ExamController()
         {
             _uow = new UnitOfWork(new HomeworXEntities());    
         }
 
-        private UnitOfWork _uow;
-
         [Route("Exam/index")]
         public ActionResult Index()
         {
-            var exams = _uow.ExamRepository.Get();
+            var exams = _uow.ExamRepository.Get(null,null, "Appointment");
 
             return View("Index", exams);
         }
@@ -37,12 +37,17 @@ namespace HomeworX.Controllers
         [Route("Exam/create")]
         public ActionResult Create()
         {
+            ViewBag.Subjects = GetSubjectsDropDown();
+            ViewBag.Topics = GetTopicDropDown();
+
             return View("Create");
         }
 
         [HttpPost]
         public ActionResult Create(Exam exam)
         {
+            exam.UID = Guid.NewGuid();
+
             _uow.ExamRepository.Insert(exam);
             _uow.Commit();
 
@@ -52,6 +57,9 @@ namespace HomeworX.Controllers
         [Route("Exam/edit/{uid}")]
         public ActionResult Edit(Guid uid)
         {
+            ViewBag.Subjects = GetSubjectsDropDown();
+            ViewBag.Topics = GetTopicDropDown();
+
             var exam = _uow.ExamRepository.Get(uid);
 
             return View("Edit", exam);
@@ -66,12 +74,49 @@ namespace HomeworX.Controllers
             return View("Details", exam);
         }
 
+        [Route("Exam/delete/{uid}")]
         public ActionResult Delete(Guid uid)
         {
             _uow.ExamRepository.Delete(uid);
             _uow.Commit();
 
             return Index();
+        }
+
+        private List<SelectListItem> GetSubjectsDropDown()
+        {
+            var subjects = _uow.SubjectRepository.Get();
+
+            List<SelectListItem> dropdownSubjects = new List<SelectListItem>();
+
+            foreach (var subject in subjects)
+            {
+                dropdownSubjects.Add(new SelectListItem()
+                {
+                    Text = subject.Description,
+                    Value = subject.UID.ToString()
+                });
+            }
+
+            return dropdownSubjects;
+        }
+
+        private List<SelectListItem> GetTopicDropDown()
+        {
+            var topics = _uow.TopicRepository.Get();
+
+            List<SelectListItem> dropdownTopics = new List<SelectListItem>();
+
+            foreach (var topic in topics)
+            {
+                dropdownTopics.Add(new SelectListItem()
+                {
+                    Text = topic.Description,
+                    Value = topic.UID.ToString()
+                });
+            }
+
+            return dropdownTopics;
         }
     }
 }

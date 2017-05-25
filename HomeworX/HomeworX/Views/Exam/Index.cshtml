@@ -20,21 +20,24 @@
         <th>
             @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
         </th>
-    </tr>class
+        <th>
+
+        </th>
+    </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Appointment.Description)
+            @Html.DisplayNameFor(model => model.Appointment.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Appointment.Date)
+            @Html.DisplayNameFor(model => model.Appointment.Date)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Appointment.Subject.Description)
+            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new {  uid=item.UID}) |
+            @Html.ActionLink("Edit", "Edit", new {  uid = item.UID }) |
             @Html.ActionLink("Details", "Details", new { uid = item.UID }) |
             @Html.ActionLink("Delete", "Delete", new { uid = item.UID })
         </td>

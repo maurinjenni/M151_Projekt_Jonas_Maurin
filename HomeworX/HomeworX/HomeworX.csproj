@@ -160,6 +160,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeworkController.cs" />
+    <Compile Include="Controllers\SubjectController.cs" />
+    <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -189,10 +192,16 @@
     </Compile>
     <Compile Include="Models\IRepository\IExamRepository.cs" />
     <Compile Include="Models\IRepository\IGenericRepository.cs" />
+    <Compile Include="Models\IRepository\IHomeworkRepository.cs" />
+    <Compile Include="Models\IRepository\ISubjectRepository.cs" />
+    <Compile Include="Models\IRepository\ITopicRepository.cs" />
     <Compile Include="Models\Model\IEntityUID.cs" />
     <Compile Include="Models\RepositoryContract\UnitOfWork.cs" />
     <Compile Include="Models\Repository\ExamRepository.cs" />
     <Compile Include="Models\Repository\GenericRepository.cs" />
+    <Compile Include="Models\Repository\HomeworkRepository.cs" />
+    <Compile Include="Models\Repository\SubjectRepository.cs" />
+    <Compile Include="Models\Repository\TopicRepository.cs" />
     <Compile Include="Models\Subject.cs">
       <DependentUpon>HomeworXModel.tt</DependentUpon>
     </Compile>
@@ -223,9 +232,6 @@
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EntityDeploy Include="Models\HomeworXModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>HomeworXModel.Designer.cs</LastGenOutput>
@@ -259,11 +265,22 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Subject\Index.cshtml" />
+    <Content Include="Views\Subject\Details.cshtml" />
+    <Content Include="Views\Subject\Create.cshtml" />
+    <Content Include="Views\Subject\Edit.cshtml" />
+    <Content Include="Views\Topic\Index.cshtml" />
+    <Content Include="Views\Topic\Details.cshtml" />
+    <Content Include="Views\Topic\Create.cshtml" />
+    <Content Include="Views\Topic\Edit.cshtml" />
     <Content Include="Views\Exam\Index.cshtml" />
+    <Content Include="Views\Exam\Create.cshtml" />
     <Content Include="Views\Exam\Details.cshtml" />
+    <Content Include="Views\Exam\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Homework\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

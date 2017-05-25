@@ -4,32 +4,26 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HomeworXModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HomeworXModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Appointment">
           <Key>
             <PropertyRef Name="UID" />
           </Key>
           <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Detail" Type="text" />
-          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Detail" Type="varchar(max)" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="SubjectUID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <!--Während der Generierung sind Fehler aufgetreten:
-Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Exam' ist kein Primärschlüssel definiert. Der Schlüssel wurde abgeleitet, und die Definition wurde als schreibgeschützte Tabelle/Sicht erstellt.-->
         <EntityType Name="Exam">
           <Key>
             <PropertyRef Name="UID" />
-            <PropertyRef Name="Remind" />
-            <PropertyRef Name="Mailadress" />
           </Key>
           <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Remind" Type="bit" Nullable="false" />
-          <Property Name="Time" Type="smalldatetime" />
+          <Property Name="Time" Type="datetime" />
           <Property Name="Mailadress" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Während der Generierung sind Fehler aufgetreten:
-Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüssel definiert. Der Schlüssel wurde abgeleitet, und die Definition wurde als schreibgeschützte Tabelle/Sicht erstellt.-->
         <EntityType Name="Homework">
           <Key>
             <PropertyRef Name="UID" />
@@ -44,7 +38,7 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Code" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Detail" Type="text" />
+          <Property Name="Detail" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Topic">
           <Key>
@@ -52,7 +46,7 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </Key>
           <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Detail" Type="text" />
+          <Property Name="Detail" Type="varchar(max)" />
           <Property Name="SubjectUID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="TopicToAppointment">
@@ -77,7 +71,7 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
         </Association>
         <Association Name="FK__Exam__Appointmen__1920BF5C">
           <End Role="Appointment" Type="Self.Appointment" Multiplicity="1" />
-          <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
+          <End Role="Exam" Type="Self.Exam" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Appointment">
               <PropertyRef Name="UID" />
@@ -137,23 +131,11 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
         </Association>
         <EntityContainer Name="HomeworXModelStoreContainer">
           <EntitySet Name="Appointment" EntityType="Self.Appointment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exam" EntityType="Self.Exam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Homework" EntityType="Self.Homework" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subject" EntityType="Self.Subject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Topic" EntityType="Self.Topic" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TopicToAppointment" EntityType="Self.TopicToAppointment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Exam" EntityType="Self.Exam" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Exam].[UID] AS [UID], 
-    [Exam].[Remind] AS [Remind], 
-    [Exam].[Time] AS [Time], 
-    [Exam].[Mailadress] AS [Mailadress]
-    FROM [dbo].[Exam] AS [Exam]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Homework" EntityType="Self.Homework" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Homework].[UID] AS [UID], 
-    [Homework].[Importance] AS [Importance]
-    FROM [dbo].[Homework] AS [Homework]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK__Appointme__Subje__145C0A3F" Association="Self.FK__Appointme__Subje__145C0A3F">
             <End Role="Subject" EntitySet="Subject" />
             <End Role="Appointment" EntitySet="Appointment" />
@@ -179,46 +161,95 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
             <End Role="TopicToAppointment" EntitySet="TopicToAppointment" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HomeworXModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HomeworXEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Appointment" EntityType="HomeworXModel.Appointment" />
+          <EntitySet Name="Exam" EntityType="HomeworXModel.Exam" />
+          <EntitySet Name="Homework" EntityType="HomeworXModel.Homework" />
+          <EntitySet Name="Subject" EntityType="HomeworXModel.Subject" />
+          <EntitySet Name="Topic" EntityType="HomeworXModel.Topic" />
+          <EntitySet Name="TopicToAppointment" EntityType="HomeworXModel.TopicToAppointment" />
+          <AssociationSet Name="FK__Appointme__Subje__145C0A3F" Association="HomeworXModel.FK__Appointme__Subje__145C0A3F">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Exam__Appointmen__1920BF5C" Association="HomeworXModel.FK__Exam__Appointmen__1920BF5C">
+            <End Role="Appointment" EntitySet="Appointment" />
+            <End Role="Exam" EntitySet="Exam" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Homework__Appoin__164452B1" Association="HomeworXModel.FK__Homework__Appoin__164452B1">
+            <End Role="Appointment" EntitySet="Appointment" />
+            <End Role="Homework" EntitySet="Homework" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TopicToAp__Appoi__20C1E124" Association="HomeworXModel.FK__TopicToAp__Appoi__20C1E124">
+            <End Role="Appointment" EntitySet="Appointment" />
+            <End Role="TopicToAppointment" EntitySet="TopicToAppointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic__SubjectUI__1CF15040" Association="HomeworXModel.FK__Topic__SubjectUI__1CF15040">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="Topic" EntitySet="Topic" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TopicToAp__Topic__1FCDBCEB" Association="HomeworXModel.FK__TopicToAp__Topic__1FCDBCEB">
+            <End Role="Topic" EntitySet="Topic" />
+            <End Role="TopicToAppointment" EntitySet="TopicToAppointment" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Appointment">
           <Key>
             <PropertyRef Name="UID" />
           </Key>
           <Property Name="UID" Type="Guid" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SubjectUID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Subject" Relationship="Self.FK__Appointme__Subje__145C0A3F" FromRole="Appointment" ToRole="Subject" />
-          <NavigationProperty Name="Exam" Relationship="Self.FK__Exam__Appointmen__1920BF5C" FromRole="Appointment" ToRole="Exam" />
-          <NavigationProperty Name="Homework" Relationship="Self.FK__Homework__Appoin__164452B1" FromRole="Appointment" ToRole="Homework" />
-          <NavigationProperty Name="TopicToAppointment" Relationship="Self.FK__TopicToAp__Appoi__20C1E124" FromRole="Appointment" ToRole="TopicToAppointment" />
+          <NavigationProperty Name="Subject" Relationship="HomeworXModel.FK__Appointme__Subje__145C0A3F" FromRole="Appointment" ToRole="Subject" />
+          <NavigationProperty Name="Exam" Relationship="HomeworXModel.FK__Exam__Appointmen__1920BF5C" FromRole="Appointment" ToRole="Exam" />
+          <NavigationProperty Name="Homework" Relationship="HomeworXModel.FK__Homework__Appoin__164452B1" FromRole="Appointment" ToRole="Homework" />
+          <NavigationProperty Name="TopicToAppointment" Relationship="HomeworXModel.FK__TopicToAp__Appoi__20C1E124" FromRole="Appointment" ToRole="TopicToAppointment" />
+        </EntityType>
+        <EntityType Name="Exam">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Guid" Nullable="false" />
+          <Property Name="Remind" Type="Boolean" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Precision="3" />
+          <Property Name="Mailadress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Appointment" Relationship="HomeworXModel.FK__Exam__Appointmen__1920BF5C" FromRole="Exam" ToRole="Appointment" />
+        </EntityType>
+        <EntityType Name="Homework">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Guid" Nullable="false" />
+          <Property Name="Importance" Type="Byte" />
+          <NavigationProperty Name="Appointment" Relationship="HomeworXModel.FK__Homework__Appoin__164452B1" FromRole="Homework" ToRole="Appointment" />
         </EntityType>
         <EntityType Name="Subject">
           <Key>
             <PropertyRef Name="UID" />
           </Key>
           <Property Name="UID" Type="Guid" Nullable="false" />
-          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Appointment" Relationship="Self.FK__Appointme__Subje__145C0A3F" FromRole="Subject" ToRole="Appointment" />
-          <NavigationProperty Name="Topic" Relationship="Self.FK__Topic__SubjectUI__1CF15040" FromRole="Subject" ToRole="Topic" />
+          <NavigationProperty Name="Appointment" Relationship="HomeworXModel.FK__Appointme__Subje__145C0A3F" FromRole="Subject" ToRole="Appointment" />
+          <NavigationProperty Name="Topic" Relationship="HomeworXModel.FK__Topic__SubjectUI__1CF15040" FromRole="Subject" ToRole="Topic" />
         </EntityType>
         <EntityType Name="Topic">
           <Key>
             <PropertyRef Name="UID" />
           </Key>
           <Property Name="UID" Type="Guid" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="SubjectUID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Subject" Relationship="Self.FK__Topic__SubjectUI__1CF15040" FromRole="Topic" ToRole="Subject" />
-          <NavigationProperty Name="TopicToAppointment" Relationship="Self.FK__TopicToAp__Topic__1FCDBCEB" FromRole="Topic" ToRole="TopicToAppointment" />
+          <NavigationProperty Name="Subject" Relationship="HomeworXModel.FK__Topic__SubjectUI__1CF15040" FromRole="Topic" ToRole="Subject" />
+          <NavigationProperty Name="TopicToAppointment" Relationship="HomeworXModel.FK__TopicToAp__Topic__1FCDBCEB" FromRole="Topic" ToRole="TopicToAppointment" />
         </EntityType>
         <EntityType Name="TopicToAppointment">
           <Key>
@@ -227,32 +258,12 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           <Property Name="UID" Type="Guid" Nullable="false" />
           <Property Name="TopicUID" Type="Guid" Nullable="false" />
           <Property Name="AppointmentUID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Appointment" Relationship="Self.FK__TopicToAp__Appoi__20C1E124" FromRole="TopicToAppointment" ToRole="Appointment" />
-          <NavigationProperty Name="Topic" Relationship="Self.FK__TopicToAp__Topic__1FCDBCEB" FromRole="TopicToAppointment" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="Exam">
-          <Key>
-            <PropertyRef Name="UID" />
-            <PropertyRef Name="Remind" />
-            <PropertyRef Name="Mailadress" />
-          </Key>
-          <Property Name="UID" Type="Guid" Nullable="false" />
-          <Property Name="Remind" Type="Boolean" Nullable="false" />
-          <Property Name="Time" Type="DateTime" Precision="0" />
-          <Property Name="Mailadress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Appointment" Relationship="Self.FK__Exam__Appointmen__1920BF5C" FromRole="Exam" ToRole="Appointment" />
-        </EntityType>
-        <EntityType Name="Homework">
-          <Key>
-            <PropertyRef Name="UID" />
-          </Key>
-          <Property Name="UID" Type="Guid" Nullable="false" />
-          <Property Name="Importance" Type="Byte" />
-          <NavigationProperty Name="Appointment" Relationship="Self.FK__Homework__Appoin__164452B1" FromRole="Homework" ToRole="Appointment" />
+          <NavigationProperty Name="Appointment" Relationship="HomeworXModel.FK__TopicToAp__Appoi__20C1E124" FromRole="TopicToAppointment" ToRole="Appointment" />
+          <NavigationProperty Name="Topic" Relationship="HomeworXModel.FK__TopicToAp__Topic__1FCDBCEB" FromRole="TopicToAppointment" ToRole="Topic" />
         </EntityType>
         <Association Name="FK__Appointme__Subje__145C0A3F">
-          <End Role="Subject" Type="Self.Subject" Multiplicity="1" />
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <End Type="HomeworXModel.Subject" Role="Subject" Multiplicity="1" />
+          <End Type="HomeworXModel.Appointment" Role="Appointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="UID" />
@@ -263,8 +274,8 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Exam__Appointmen__1920BF5C">
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="1" />
-          <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
+          <End Type="HomeworXModel.Appointment" Role="Appointment" Multiplicity="1" />
+          <End Type="HomeworXModel.Exam" Role="Exam" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Appointment">
               <PropertyRef Name="UID" />
@@ -275,8 +286,8 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Homework__Appoin__164452B1">
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="1" />
-          <End Role="Homework" Type="Self.Homework" Multiplicity="0..1" />
+          <End Type="HomeworXModel.Appointment" Role="Appointment" Multiplicity="1" />
+          <End Type="HomeworXModel.Homework" Role="Homework" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Appointment">
               <PropertyRef Name="UID" />
@@ -287,8 +298,8 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__TopicToAp__Appoi__20C1E124">
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="1" />
-          <End Role="TopicToAppointment" Type="Self.TopicToAppointment" Multiplicity="*" />
+          <End Type="HomeworXModel.Appointment" Role="Appointment" Multiplicity="1" />
+          <End Type="HomeworXModel.TopicToAppointment" Role="TopicToAppointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Appointment">
               <PropertyRef Name="UID" />
@@ -299,8 +310,8 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Topic__SubjectUI__1CF15040">
-          <End Role="Subject" Type="Self.Subject" Multiplicity="1" />
-          <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
+          <End Type="HomeworXModel.Subject" Role="Subject" Multiplicity="1" />
+          <End Type="HomeworXModel.Topic" Role="Topic" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Subject">
               <PropertyRef Name="UID" />
@@ -311,8 +322,8 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__TopicToAp__Topic__1FCDBCEB">
-          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
-          <End Role="TopicToAppointment" Type="Self.TopicToAppointment" Multiplicity="*" />
+          <End Type="HomeworXModel.Topic" Role="Topic" Multiplicity="1" />
+          <End Type="HomeworXModel.TopicToAppointment" Role="TopicToAppointment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Topic">
               <PropertyRef Name="UID" />
@@ -322,38 +333,6 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="HomeworXEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Appointment" EntityType="Self.Appointment" />
-          <EntitySet Name="Subject" EntityType="Self.Subject" />
-          <EntitySet Name="Topic" EntityType="Self.Topic" />
-          <EntitySet Name="TopicToAppointment" EntityType="Self.TopicToAppointment" />
-          <EntitySet Name="Exam" EntityType="Self.Exam" />
-          <EntitySet Name="Homework" EntityType="Self.Homework" />
-          <AssociationSet Name="FK__Appointme__Subje__145C0A3F" Association="Self.FK__Appointme__Subje__145C0A3F">
-            <End Role="Subject" EntitySet="Subject" />
-            <End Role="Appointment" EntitySet="Appointment" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Exam__Appointmen__1920BF5C" Association="Self.FK__Exam__Appointmen__1920BF5C">
-            <End Role="Appointment" EntitySet="Appointment" />
-            <End Role="Exam" EntitySet="Exam" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Homework__Appoin__164452B1" Association="Self.FK__Homework__Appoin__164452B1">
-            <End Role="Appointment" EntitySet="Appointment" />
-            <End Role="Homework" EntitySet="Homework" />
-          </AssociationSet>
-          <AssociationSet Name="FK__TopicToAp__Appoi__20C1E124" Association="Self.FK__TopicToAp__Appoi__20C1E124">
-            <End Role="Appointment" EntitySet="Appointment" />
-            <End Role="TopicToAppointment" EntitySet="TopicToAppointment" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Topic__SubjectUI__1CF15040" Association="Self.FK__Topic__SubjectUI__1CF15040">
-            <End Role="Subject" EntitySet="Subject" />
-            <End Role="Topic" EntitySet="Topic" />
-          </AssociationSet>
-          <AssociationSet Name="FK__TopicToAp__Topic__1FCDBCEB" Association="Self.FK__TopicToAp__Topic__1FCDBCEB">
-            <End Role="Topic" EntitySet="Topic" />
-            <End Role="TopicToAppointment" EntitySet="TopicToAppointment" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -363,58 +342,58 @@ Warnung 6002: Für Tabelle/Sicht 'HomeworX.dbo.Homework' ist kein Primärschlüs
           <EntitySetMapping Name="Appointment">
             <EntityTypeMapping TypeName="HomeworXModel.Appointment">
               <MappingFragment StoreEntitySet="Appointment">
-                <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="SubjectUID" ColumnName="SubjectUID" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="SubjectUID" ColumnName="SubjectUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Subject">
-            <EntityTypeMapping TypeName="HomeworXModel.Subject">
-              <MappingFragment StoreEntitySet="Subject">
-                <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Topic">
-            <EntityTypeMapping TypeName="HomeworXModel.Topic">
-              <MappingFragment StoreEntitySet="Topic">
-                <ScalarProperty Name="UID" ColumnName="UID" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Detail" ColumnName="Detail" />
-                <ScalarProperty Name="SubjectUID" ColumnName="SubjectUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TopicToAppointment">
-            <EntityTypeMapping TypeName="HomeworXModel.TopicToAppointment">
-              <MappingFragment StoreEntitySet="TopicToAppointment">
                 <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="TopicUID" ColumnName="TopicUID" />
-                <ScalarProperty Name="AppointmentUID" ColumnName="AppointmentUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Exam">
             <EntityTypeMapping TypeName="HomeworXModel.Exam">
               <MappingFragment StoreEntitySet="Exam">
-                <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="Remind" ColumnName="Remind" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Mailadress" ColumnName="Mailadress" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Remind" ColumnName="Remind" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Homework">
             <EntityTypeMapping TypeName="HomeworXModel.Homework">
               <MappingFragment StoreEntitySet="Homework">
-                <ScalarProperty Name="UID" ColumnName="UID" />
                 <ScalarProperty Name="Importance" ColumnName="Importance" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subject">
+            <EntityTypeMapping TypeName="HomeworXModel.Subject">
+              <MappingFragment StoreEntitySet="Subject">
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topic">
+            <EntityTypeMapping TypeName="HomeworXModel.Topic">
+              <MappingFragment StoreEntitySet="Topic">
+                <ScalarProperty Name="SubjectUID" ColumnName="SubjectUID" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TopicToAppointment">
+            <EntityTypeMapping TypeName="HomeworXModel.TopicToAppointment">
+              <MappingFragment StoreEntitySet="TopicToAppointment">
+                <ScalarProperty Name="AppointmentUID" ColumnName="AppointmentUID" />
+                <ScalarProperty Name="TopicUID" ColumnName="TopicUID" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -17,10 +17,18 @@ namespace HomeworX.Models.RepositoryContract
             _context = context;
 
             ExamRepository = new ExamRepository(_context);
+            HomeworkRepository = new HomeworkRepository(_context);
+            SubjectRepository = new SubjectRepository(_context);
+            TopicRepository = new TopicRepository(_context);
         }
 
         public IExamRepository ExamRepository { get; set; }
 
+        public IHomeworkRepository HomeworkRepository { get; set; }
+
+        public ISubjectRepository SubjectRepository { get; set; }
+
+        public ITopicRepository TopicRepository { get; set; }
 
         public void Commit()
         {
