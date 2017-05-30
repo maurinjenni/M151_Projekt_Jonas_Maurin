@@ -46,7 +46,20 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Exam exam)
         {
-            exam.UID = Guid.NewGuid();
+            exam.Appointment.UID = Guid.NewGuid();
+            exam.UID = exam.Appointment.UID;
+
+            exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
+
+            foreach (var topic in exam.Topics)
+            {
+                exam.Appointment.TopicToAppointment.Add(new TopicToAppointment()
+                {
+                    UID = Guid.NewGuid(),
+                    TopicUID = topic,
+                    AppointmentUID = exam.UID
+                });
+            }
 
             _uow.ExamRepository.Insert(exam);
             _uow.Commit();
@@ -62,12 +75,26 @@ namespace HomeworX.Controllers
 
             var exam = _uow.ExamRepository.Get(uid);
 
+            exam.Topics = exam.Appointment.TopicToAppointment.Select(tta => tta.TopicUID).ToList();
+
             return View("Edit", exam);
         }
 
         [HttpPost]
         public ActionResult Edit(Exam exam)
         {
+            exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
+            exam.Appointment.UID = exam.UID;
+            foreach (var topic in exam.Topics)
+            {
+                exam.Appointment.TopicToAppointment.Add(new TopicToAppointment()
+                {
+                    UID = Guid.NewGuid(),
+                    TopicUID = topic,
+                    AppointmentUID = exam.UID
+                });
+            }
+
             _uow.ExamRepository.Update(exam);
             _uow.Commit();
 
@@ -101,22 +128,9 @@ namespace HomeworX.Controllers
             return dropdownSubjects;
         }
 
-        private List<SelectListItem> GetTopicDropDown()
+        private ICollection<Topic> GetTopicDropDown()
         {
-            var topics = _uow.TopicRepository.Get();
-
-            List<SelectListItem> dropdownTopics = new List<SelectListItem>();
-
-            foreach (var topic in topics)
-            {
-                dropdownTopics.Add(new SelectListItem()
-                {
-                    Text = topic.Description,
-                    Value = topic.UID.ToString()
-                });
-            }
-
-            return dropdownTopics;
+            return _uow.TopicRepository.Get()as ICollection<Topic>;
         }
     }
 }

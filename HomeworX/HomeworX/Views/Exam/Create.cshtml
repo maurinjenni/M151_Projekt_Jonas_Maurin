@@ -1,4 +1,7 @@
-﻿@model HomeworX.Models.Exam
+﻿@using System.Collections
+@using HomeworX.Models
+@using Microsoft.Ajax.Utilities
+@model HomeworX.Models.Exam
 
 @{
     ViewBag.Title = "Create";
@@ -6,11 +9,45 @@
 
 <h2>Create</h2>
 
+<script>
+        function dropdowonchange() {
+            $("#TopicListBox > option").remove();
+
+            var topics = @Html.Raw(
+                Json.Encode(
+                    ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
+                    {
+                        UID = topic.UID,
+                        SubjectUID = topic.SubjectUID,
+                        Description = topic.Description
+                    })
+                )
+            );
+
+            console.log(topics);
+
+            var subjectUID = $("#SubjectDropDown").val();
+
+            console.log(subjectUID);
+
+            topics.forEach(function(topic) {
+                console.log(topic);
+                if (topic.SubjectUID == subjectUID) {
+                    console.log("topic: " + topic.SubjectUID + "Subject: " + subjectUID);
+                    $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
+                }
+            });
+        }
+</script>
+
+
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+
+
+
     <div class="form-horizontal">
         <h4>Exam</h4>
         <hr />
@@ -43,7 +80,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Appointment.SubjectUID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>)ViewBag.Subjects, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>)ViewBag.Subjects, new { @class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown" })
                 @Html.ValidationMessageFor(model => model.Appointment.Date, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -67,16 +104,25 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Mailadress, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Mailadress, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Mailadress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Mailadress, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Mailadress, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Mailadress, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Topics, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <!--Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics).Where(t => t.SubjectUID == (Model != null && Model.Appointment != null ? Model.Appointment.SubjectUID : Guid.Empty)), "UID", "Description"), new { class = "form-control", ID = "TopicListBox"})-->
+                @Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>) ViewBag.Topics), "UID", "Description"), new {@class = "form-control", @ID = "TopicListBox"})
+                @Html.ValidationMessageFor(model => model.Mailadress, "", new {@class = "text-danger"})
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default"/>
             </div>
         </div>
     </div>
