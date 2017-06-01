@@ -35,13 +35,15 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Meine ASP.NET-Anwendung</p>
+        
+        <footer class="container footer body-content text-center">
+            <p>Modul 151 Projekt: HomeworX von Maurin Jenni und Hodel Jonas</p>
         </footer>
     </div>
+    
 
 
-    @RenderSection("scripts", required: false)
+
+@RenderSection("scripts", required: false)
 </body>
 </html>
