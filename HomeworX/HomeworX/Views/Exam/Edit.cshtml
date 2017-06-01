@@ -10,7 +10,7 @@
 <h2>Edit</h2>
 
 <script>
-        function dropdowonchange() {
+function dropdowonchange() {
             $("#TopicListBox > option").remove();
 
             var topics = @Html.Raw(
@@ -24,27 +24,17 @@
                 )
             );
 
-
-
-
             var subjectUID = $("#SubjectDropDown").val();
 
             topics.forEach(function(topic) {
                 if (topic.SubjectUID == subjectUID) {
                     $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
                 }
-
-                console.log(topic.UID);
-                console.log(selectedtopics);
-
-                if (inArray(topic.UID, selectedtopics) !== -1) {
-                    console.log($('#TopicListBox option[value=' + topic.UID + ']'));
-                    $('#TopicListBox option[value=' + topic.UID + ']').prop('selected', true);
-                }
             });
         }
 
         $(document).ready(function() {
+            dropdowonchange();
 
             var topics = @Html.Raw(
                 Json.Encode(
@@ -59,17 +49,15 @@
 
             var selectedtopics = @Html.Raw(
             Json.Encode(
-                ((IEnumerable<TopicToAppointment>)Model.Appointment.TopicToAppointment).Select(tta => new
-                {
-                    UID = tta.TopicUID
-                })
+                ((IEnumerable<TopicToAppointment>)Model.Appointment.TopicToAppointment).Select(tta => tta.TopicUID)
             ));
 
-            topics.forEach(function(topic) {
-                console.log(($.inArray(topic.UID, selectedtopics)));
-                console.log(topic.UID);
-                console.log(selectedtopics);
+            console.log(selectedtopics);
 
+            topics.forEach(function(topic) {
+                console.log(topic.UID);
+                console.log($.inArray(topic.UID, selectedtopics));
+                
                 if ($.inArray(topic.UID, selectedtopics) !== -1) {
                     console.log($('#TopicListBox option[value=' + topic.UID + ']'));
                     $('#TopicListBox option[value=' + topic.UID + ']').prop('selected', true);
