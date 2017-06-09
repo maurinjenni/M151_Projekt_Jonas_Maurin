@@ -102,7 +102,7 @@ function dropdowonchange() {
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Appointment.SubjectUID, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Appointment.Subject.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>) ViewBag.Subjects, new {@class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown"})
                 @Html.ValidationMessageFor(model => model.Appointment.Date, "", new {@class = "text-danger"})
@@ -111,7 +111,7 @@ function dropdowonchange() {
 
         <div class="form-group">
             @Html.LabelFor(model => model.Remind, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-10 left">
                 <div class="checkbox">
                     @Html.EditorFor(model => model.Remind)
                     @Html.ValidationMessageFor(model => model.Remind, "", new { @class = "text-danger" })
@@ -144,16 +144,16 @@ function dropdowonchange() {
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="col-md-offset-2 col-md-1">
+                <input type="submit" value="Save" class="btn btn-default btn-block" />
+            </div>
+
+            <div class="col-md-1">
+                @Html.ActionLink("Liste", "Index", null, new { @class = "btn btn-default btn-block" })
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

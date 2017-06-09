@@ -6,68 +6,70 @@
 
 <h2>Details</h2>
 
-<div>
+<div class="form-horizontal">
     <h4>Exam</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Appointment.Description)
-        </dt>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Appointment.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Appointment.Description, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Appointment.Detail, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Appointment.Detail, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Appointment.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Appointment.Date, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Appointment.Subject.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Appointment.Subject.Description, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Appointment.Description)
-        </dd>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Remind, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 left">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.Remind)
+                @Html.ValidationMessageFor(model => model.Remind, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Mailadress, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Mailadress, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Appointment.Detail)
-        </dt>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-1">
+            @Html.ActionLink("Ändern", "Edit", new { uid = Model.UID }, new { @class = "btn btn-default btn-block" })
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Appointment.Detail)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Appointment.Date)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Appointment.Date)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Appointment.Subject.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Remind)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Remind)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Time)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Time)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Mailadress)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Mailadress)
-        </dd>
-    </dl>
+        <div class="col-md-1">
+            @Html.ActionLink("Liste", "Index", null, new { @class = "btn btn-default btn-block" })
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { uid = Model.UID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

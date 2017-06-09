@@ -6,42 +6,53 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Appointment.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Appointment.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
-        </th>
-        <th>
+@Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @Style = "margin-bottom: 10px" })
 
-        </th>
-    </tr>
+<ul class="list-group col-md-12">
+    <li class="list-group-item active">
+        <div class="container">
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Description)
+            </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayNameFor(model => model.Appointment.Description)
-        </td>
-        <td>
-            @Html.DisplayNameFor(model => model.Appointment.Date)
-        </td>
-        <td>
-            @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new {  uid = item.UID }) |
-            @Html.ActionLink("Details", "Details", new { uid = item.UID }) |
-            @Html.ActionLink("Delete", "Delete", new { uid = item.UID })
-        </td>
-    </tr>
-}
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Date)
+            </div>
 
-</table>
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
+            </div>
+        </div>
+    </li>
+
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div class="container">
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Description)
+                </div>
+
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Date)
+                </div>
+
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Subject.Description)
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Ändern", "Edit", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Detail", "Details", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Löschen", "Delete", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+            </div>
+        </li>
+    }
+</ul>
