@@ -30,6 +30,8 @@ namespace HomeworX.Controllers
         {
             var topic = _uow.TopicRepository.Get(uid);
 
+            ViewBag.Subjects = GetSubjectsDropDown();
+
             return View("Details", topic);
         }
 
@@ -49,6 +51,8 @@ namespace HomeworX.Controllers
             _uow.TopicRepository.Insert(topic);
             _uow.Commit();
 
+            ViewBag.Subjects = GetSubjectsDropDown();
+
             return View("Details", topic);
         }
 
@@ -67,6 +71,8 @@ namespace HomeworX.Controllers
         {
             _uow.TopicRepository.Update(topic);
             _uow.Commit();
+
+            ViewBag.Subjects = GetSubjectsDropDown();
 
             return View("Details", topic);
         }

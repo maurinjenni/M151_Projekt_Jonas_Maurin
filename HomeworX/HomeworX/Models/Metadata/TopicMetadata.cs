@@ -13,7 +13,7 @@ namespace HomeworX.Models.Metadata
         public string Detail { get; set; }
 
         [Required]
-        [Display(Name = "Fach")]
+        [Display(Name = "Fach Code")]
         public System.Guid SubjectUID { get; set; }
     }
 }

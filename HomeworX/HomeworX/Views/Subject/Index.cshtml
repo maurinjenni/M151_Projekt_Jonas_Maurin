@@ -5,8 +5,10 @@
 }
 
 <h2>Index</h2>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" , @Style="margin-bottom: 10px" })
-<ul class="list-group">
+
+@Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @Style = "margin-bottom: 10px" })
+
+<ul class="list-group col-md-12">
     <li class="list-group-item active">
         <div class="container">
             <div class="col-md-3">
@@ -39,10 +41,16 @@
                 @Html.DisplayFor(modelItem => item.Detail)
             </div>
             
-            <div class="col-md-3">
-                @Html.ActionLink("Edit", "Edit", new { uid = item.UID }, new { @class = "btn btn-default" })
-                @Html.ActionLink("Details", "Details", new { uid = item.UID }, new { @class = "btn" }) 
-                @Html.ActionLink("Delete", "Delete", new { uid = item.UID }, new { @class = "btn" })
+            <div class="col-md-1">
+                @Html.ActionLink("Ändern", "Edit", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+            </div>
+
+            <div class="col-md-1">
+                @Html.ActionLink("Detail", "Details", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+            </div>
+
+            <div class="col-md-1">
+                @Html.ActionLink("Löschen", "Delete", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
             </div>
         </div>
     </li>
