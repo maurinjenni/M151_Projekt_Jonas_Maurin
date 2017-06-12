@@ -29,6 +29,9 @@ namespace HomeworX
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                 "~/Scripts/angular.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/HomeworX").Include(
+                "~/Scripts/HomeworX_RemindToggle.js"));
         }
     }
 }
