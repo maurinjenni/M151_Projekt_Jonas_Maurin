@@ -64,12 +64,12 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Exam exam)
         {
+            // Logic
             if (!string.IsNullOrEmpty(exam.Mailadress) || exam.Time != null)
             {
                 exam.Remind = true;
             }
 
-            // Logic
             if (exam.Appointment.IsValid() && exam.IsValid())
             {
                 exam.Appointment.UID = Guid.NewGuid();

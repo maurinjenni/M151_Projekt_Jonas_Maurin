@@ -170,6 +170,7 @@
       <DependentUpon>HomeworXModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DataTransferObjects\AppointmentDTO.cs" />
+    <Compile Include="Models\DataTransferObjects\HomeworkDTO.cs" />
     <Compile Include="Models\DataTransferObjects\SubjectDTO.cs" />
     <Compile Include="Models\DataTransferObjects\TopicDTO.cs" />
     <Compile Include="Models\Exam.cs">
@@ -294,10 +295,13 @@
     <Content Include="Views\Exam\Create.cshtml" />
     <Content Include="Views\Exam\Details.cshtml" />
     <Content Include="Views\Exam\Edit.cshtml" />
+    <Content Include="Views\Homework\Index.cshtml" />
+    <Content Include="Views\Homework\Edit.cshtml" />
+    <Content Include="Views\Homework\Details.cshtml" />
+    <Content Include="Views\Homework\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Homework\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

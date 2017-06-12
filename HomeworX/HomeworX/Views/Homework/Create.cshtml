@@ -1,13 +1,11 @@
-﻿@using System.Collections
-@using System.Web.Mvc.Html
-@using HomeworX.Models
-@model HomeworX.Models.Exam
+﻿@using HomeworX.Models
+@model HomeworX.Models.Homework
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
 }
 
-<h2>Edit</h2>
+<h2>Create</h2>
 
 <script>
     function dropdowonchange() {
@@ -46,34 +44,32 @@
                              })
                              )
                          );
+        console.log(topics);
 
-        var selectedtopics = @Html.Raw(
-                                 Json.Encode(
-                                     ((IEnumerable<TopicToAppointment>)Model.Appointment.TopicToAppointment).Select(tta => tta.TopicUID)
-                                     ));
+        var subjectUID = $("#SubjectDropDown").val();
 
-        console.log(selectedtopics);
+        console.log(subjectUID);
 
         topics.forEach(function(topic) {
-            console.log(topic.UID);
-            console.log($.inArray(topic.UID, selectedtopics));
-                
-            if ($.inArray(topic.UID, selectedtopics) !== -1) {
-                console.log($('#TopicListBox option[value=' + topic.UID + ']'));
-                $('#TopicListBox option[value=' + topic.UID + ']').prop('selected', true);
+            console.log(topic);
+            if (topic.SubjectUID == subjectUID) {
+                console.log("topic: " + topic.SubjectUID + "Subject: " + subjectUID);
+                $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
             }
         });
     });
 </script>
+
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Exam</h4>
+        <h4>Homework</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Appointment.Description, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -110,37 +106,18 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Topics, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <!--Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics).Where(t => t.SubjectUID == (Model != null && Model.Appointment != null ? Model.Appointment.SubjectUID : Guid.Empty)), "UID", "Description"), new { class = "form-control", ID = "TopicListBox"})-->
                 @Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics), "UID", "Description"), new { @class = "form-control", @ID = "TopicListBox" })
                 @Html.ValidationMessageFor(model => model.Topics, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-1 left">
-                <a href="javascript:toggle('remindContainer')" id="aufklappButton" class="btn btn-default btn-block">Errinnerung</a>
+            @Html.LabelFor(model => model.Importance, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Importance, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Importance, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div id="remindContainer" style="display: none">
-            <div class="form-group">
-                @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Mailadress, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Mailadress, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Mailadress, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-1">
                 <input type="submit" value="Save" class="btn btn-default btn-block" />

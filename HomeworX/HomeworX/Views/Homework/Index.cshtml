@@ -1,0 +1,58 @@
+﻿@model IEnumerable<HomeworX.Models.Homework>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @Style = "margin-bottom: 10px" })
+
+<ul class="list-group col-md-12">
+    <li class="list-group-item active">
+        <div class="container">
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Description)
+            </div>
+
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Date)
+            </div>
+
+            <div class="col-md-3">
+                @Html.DisplayNameFor(model => model.Appointment.Subject.Description)
+            </div>
+        </div>
+    </li>
+
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            <div class="container">
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Description)
+                </div>
+
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Date)
+                </div>
+
+                <div class="col-md-3">
+                    @Html.DisplayFor(modelItem => item.Appointment.Subject.Description)
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Ändern", "Edit", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Detail", "Details", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+
+                <div class="col-md-1">
+                    @Html.ActionLink("Löschen", "Delete", new { uid = item.UID }, new { @class = "btn btn-default btn-block" })
+                </div>
+            </div>
+        </li>
+    }
+</ul>
