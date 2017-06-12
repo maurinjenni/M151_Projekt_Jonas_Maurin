@@ -13,5 +13,20 @@ namespace HomeworX.Models.Repository
         {
             
         }
+
+        public void UpdateTopicToAppointment(List<Guid> topicUIDs, Guid appointmentUID )
+        {
+            _context.TopicToAppointment.RemoveRange(_context.TopicToAppointment.Where(tta => tta.AppointmentUID == appointmentUID));
+
+            foreach (var topicUID in topicUIDs)
+            {
+                _context.TopicToAppointment.Add(new TopicToAppointment()
+                {
+                    UID = Guid.NewGuid(),
+                    AppointmentUID = appointmentUID,
+                    TopicUID = topicUID
+                });
+            }
+        }
     }
 }

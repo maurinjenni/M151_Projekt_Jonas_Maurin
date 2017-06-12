@@ -10,60 +10,75 @@
 <h2>Edit</h2>
 
 <script>
-function dropdowonchange() {
-            $("#TopicListBox > option").remove();
+    function dropdowonchange() {
+        $("#TopicListBox > option").remove();
 
-            var topics = @Html.Raw(
-                Json.Encode(
-                    ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
-                    {
-                        UID = topic.UID,
-                        SubjectUID = topic.SubjectUID,
-                        Description = topic.Description
-                    })
-                )
-            );
+        var topics = @Html.Raw(
+                         Json.Encode(
+                             ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
+                             {
+                                 UID = topic.UID,
+                                 SubjectUID = topic.SubjectUID,
+                                 Description = topic.Description
+                             })
+                             )
+                         );
 
-            var subjectUID = $("#SubjectDropDown").val();
+        var subjectUID = $("#SubjectDropDown").val();
 
-            topics.forEach(function(topic) {
-                if (topic.SubjectUID == subjectUID) {
-                    $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            dropdowonchange();
-
-            var topics = @Html.Raw(
-                Json.Encode(
-                    ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
-                    {
-                        UID = topic.UID,
-                        SubjectUID = topic.SubjectUID,
-                        Description = topic.Description
-                    })
-                )
-            );
-
-            var selectedtopics = @Html.Raw(
-            Json.Encode(
-                ((IEnumerable<TopicToAppointment>)Model.Appointment.TopicToAppointment).Select(tta => tta.TopicUID)
-            ));
-
-            console.log(selectedtopics);
-
-            topics.forEach(function(topic) {
-                console.log(topic.UID);
-                console.log($.inArray(topic.UID, selectedtopics));
-                
-                if ($.inArray(topic.UID, selectedtopics) !== -1) {
-                    console.log($('#TopicListBox option[value=' + topic.UID + ']'));
-                    $('#TopicListBox option[value=' + topic.UID + ']').prop('selected', true);
-                }
-            });
+        topics.forEach(function(topic) {
+            if (topic.SubjectUID == subjectUID) {
+                $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
+            }
         });
+    }
+
+    $(document).ready(function() {
+        dropdowonchange();
+
+        var topics = @Html.Raw(
+                         Json.Encode(
+                             ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
+                             {
+                                 UID = topic.UID,
+                                 SubjectUID = topic.SubjectUID,
+                                 Description = topic.Description
+                             })
+                             )
+                         );
+
+        var selectedtopics = @Html.Raw(
+                                 Json.Encode(
+                                     ((IEnumerable<TopicToAppointment>)Model.Appointment.TopicToAppointment).Select(tta => tta.TopicUID)
+                                     ));
+
+        console.log(selectedtopics);
+
+        topics.forEach(function(topic) {
+            console.log(topic.UID);
+            console.log($.inArray(topic.UID, selectedtopics));
+                
+            if ($.inArray(topic.UID, selectedtopics) !== -1) {
+                console.log($('#TopicListBox option[value=' + topic.UID + ']'));
+                $('#TopicListBox option[value=' + topic.UID + ']').prop('selected', true);
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+  function toggle(id){
+    var e = document.getElementById(id);
+    var button = document.getElementById('aufklappButton');
+
+    if (e.style.display == "none"){
+        e.style.display = "";
+        button.innerHTML = "Zuklappen";
+    } else {
+        e.style.display = "none";
+        button.innerHTML = "Errinnerung";
+    }
+  }
 </script>
 
 @using (Html.BeginForm())
@@ -74,8 +89,6 @@ function dropdowonchange() {
         <h4>Exam</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.UID)
-        @Html.HiddenFor(model => model.Appointment.UID)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Appointment.Description, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -102,46 +115,46 @@ function dropdowonchange() {
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Appointment.Subject.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Appointment.SubjectUID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>) ViewBag.Subjects, new {@class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown"})
-                @Html.ValidationMessageFor(model => model.Appointment.Date, "", new {@class = "text-danger"})
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remind, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10 left">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Remind)
-                    @Html.ValidationMessageFor(model => model.Remind, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Mailadress, htmlAttributes: new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Mailadress, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Mailadress, "", new {@class = "text-danger"})
+                @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>)ViewBag.Subjects, new { @class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown" })
+                @Html.ValidationMessageFor(model => model.Appointment.Date, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Topics, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics), "UID", "Description"), new {@class = "form-control", @ID = "TopicListBox"})
-                @Html.ValidationMessageFor(model => model.Topics, "", new {@class = "text-danger"})
+                <!--Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics).Where(t => t.SubjectUID == (Model != null && Model.Appointment != null ? Model.Appointment.SubjectUID : Guid.Empty)), "UID", "Description"), new { class = "form-control", ID = "TopicListBox"})-->
+                @Html.ListBoxFor(model => model.Topics, new MultiSelectList(((ICollection<Topic>)ViewBag.Topics), "UID", "Description"), new { @class = "form-control", @ID = "TopicListBox" })
+                @Html.ValidationMessageFor(model => model.Mailadress, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-1 left">
+                <a href="javascript:toggle('remindContainer')" id="aufklappButton" class="btn btn-default btn-block">Errinnerung</a>
+            </div>
+        </div>
+
+        <div id="remindContainer" style="display: none">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Mailadress, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Mailadress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Mailadress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-1">

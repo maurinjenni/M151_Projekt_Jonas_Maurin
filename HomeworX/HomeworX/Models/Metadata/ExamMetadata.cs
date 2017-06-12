@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HomeworX.Models.Metadata
@@ -6,7 +7,6 @@ namespace HomeworX.Models.Metadata
     public class ExamMetadata
     {
         [EmailAddress()]
-        [Required]
         [Display(Name = "Mail Adresse")]
         public string Mailadress { get; set; }
 
@@ -15,5 +15,9 @@ namespace HomeworX.Models.Metadata
 
         [Display(Name = "Errinerungsdatum")]
         public Nullable<System.DateTime> Time { get; set; }
+
+        [Display(Name = "Themen")]
+        [Required]
+        public IEnumerable<Guid> Topics { get; set; }
     }
 }

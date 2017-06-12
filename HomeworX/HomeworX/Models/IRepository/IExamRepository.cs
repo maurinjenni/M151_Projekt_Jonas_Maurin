@@ -9,6 +9,6 @@ namespace HomeworX.Models.IRepository
 {
     public interface IExamRepository : IGenericRepository<Exam>
     {
-
+        void UpdateTopicToAppointment(List<Guid> topicUIDs, Guid appointmentUID);
     }
 }
