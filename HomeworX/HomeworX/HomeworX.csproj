@@ -169,6 +169,9 @@
     <Compile Include="Models\Appointment.cs">
       <DependentUpon>HomeworXModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataTransferObjects\AppointmentDTO.cs" />
+    <Compile Include="Models\DataTransferObjects\SubjectDTO.cs" />
+    <Compile Include="Models\DataTransferObjects\TopicDTO.cs" />
     <Compile Include="Models\Exam.cs">
       <DependentUpon>HomeworXModel.tt</DependentUpon>
     </Compile>
@@ -196,6 +199,7 @@
     <Compile Include="Models\IRepository\IHomeworkRepository.cs" />
     <Compile Include="Models\IRepository\ISubjectRepository.cs" />
     <Compile Include="Models\IRepository\ITopicRepository.cs" />
+    <Compile Include="Models\IRepository\ITopicToAppointmentRepository.cs" />
     <Compile Include="Models\Metadata\AppointmentMetadata.cs" />
     <Compile Include="Models\Metadata\ExamMetadata.cs" />
     <Compile Include="Models\Metadata\HomeworkMetadata.cs" />
@@ -209,6 +213,7 @@
     <Compile Include="Models\Repository\HomeworkRepository.cs" />
     <Compile Include="Models\Repository\SubjectRepository.cs" />
     <Compile Include="Models\Repository\TopicRepository.cs" />
+    <Compile Include="Models\Repository\TopicToAppointmentRepository.cs" />
     <Compile Include="Models\Subject.cs">
       <DependentUpon>HomeworXModel.tt</DependentUpon>
     </Compile>

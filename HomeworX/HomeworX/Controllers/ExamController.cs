@@ -64,32 +64,40 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Exam exam)
         {
-            // Logic
-            exam.Appointment.UID = Guid.NewGuid();
-            exam.UID = exam.Appointment.UID;
-
-            exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
-
-            if (exam.Topics != null)
+            if (!string.IsNullOrEmpty(exam.Mailadress) || exam.Time != null)
             {
-                foreach (var topic in exam.Topics)
-                {
-                    exam.Appointment.TopicToAppointment.Add(new TopicToAppointment()
-                    {
-                        UID = Guid.NewGuid(),
-                        TopicUID = topic,
-                        AppointmentUID = exam.UID
-                    });
-                }
+                exam.Remind = true;
             }
 
-            // Repository Call
-            _uow.ExamRepository.Insert(exam);
-            _uow.Commit();
+            // Logic
+            if (exam.Appointment.IsValid() && exam.IsValid())
+            {
+                exam.Appointment.UID = Guid.NewGuid();
+                exam.UID = exam.Appointment.UID;
 
-            // Information Load
-            ViewBag.Topics = GetTopicDropDown();
-            ViewBag.Topics = GetTopicDropDown();
+                exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
+
+                if (exam.Topics != null)
+                {
+                    foreach (var topic in exam.Topics)
+                    {
+                        exam.Appointment.TopicToAppointment.Add(new TopicToAppointment()
+                        {
+                            UID = Guid.NewGuid(),
+                            TopicUID = topic,
+                            AppointmentUID = exam.UID
+                        });
+                    }
+                }
+
+                // Repository Call
+                _uow.ExamRepository.Insert(exam);
+                _uow.Commit();
+            }
+            else
+            {
+                return Create();
+            }
 
             // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();
@@ -119,19 +127,31 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Edit(Exam exam)
         {
-            // Logic
-            exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
-            exam.Appointment.UID = exam.UID;
-
-            // Repository Call
-            _uow.ExamRepository.Update(exam);
-
-            if (exam.Topics != null)
+            if (!string.IsNullOrEmpty(exam.Mailadress) || exam.Time != null)
             {
-                _uow.ExamRepository.UpdateTopicToAppointment(exam.Topics.ToList(), exam.Appointment.UID);
+                exam.Remind = true;
             }
 
-            _uow.Commit();
+            if (exam.Appointment.IsValid() && exam.IsValid())
+            {
+                // Logic
+                exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
+                exam.Appointment.UID = exam.UID;
+
+                // Repository Call
+                _uow.ExamRepository.Update(exam);
+
+                if (exam.Topics != null)
+                {
+                    _uow.ExamRepository.UpdateTopicToAppointment(exam.Topics.ToList(), exam.Appointment.UID);
+                }
+
+                _uow.Commit();
+            }
+            else
+            {
+                return Edit(exam.UID);
+            }
 
             // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();

@@ -20,69 +20,119 @@ namespace HomeworX.Controllers
         [Route("Topic/index")]
         public ActionResult Index()
         {
+            // Data Load
             var topics = _uow.TopicRepository.Get();
 
+            // Information Load
+
+            // Logic
+
+            // Load View
             return View("Index", topics);
         }
 
         [Route("Topic/details/{uid}")]
         public ActionResult Details(Guid uid)
         {
+            // Data Load
             var topic = _uow.TopicRepository.Get(uid);
 
+            // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();
 
+            // Logic
+
+            // Load View
             return View("Details", topic);
         }
 
         [Route("Topic/create")]
         public ActionResult Create()
         {
+            // Data Load
+
+            // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();
 
+            // Logic
+
+            // Load View
             return View("Create");
         }
 
         [HttpPost]
         public ActionResult Create(Topic topic)
         {
-            topic.UID = Guid.NewGuid();
+            // Logic
+            if (topic.IsValid())
+            {
+                topic.UID = Guid.NewGuid();
 
-            _uow.TopicRepository.Insert(topic);
-            _uow.Commit();
+                // Repository Call
+                _uow.TopicRepository.Insert(topic);
+                _uow.Commit();
+            }
+            else
+            {
+                return View("Create");
+            }
 
+            // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();
 
+            // Load View
             return View("Details", topic);
         }
 
         [Route("Topic/edit/{uid}")]
         public ActionResult Edit(Guid uid)
         {
-            ViewBag.Subjects = GetSubjectsDropDown();
-
+            // Data Load
             var topic = _uow.TopicRepository.Get(uid);
 
+            // Information Load
+            ViewBag.Subjects = GetSubjectsDropDown();
+
+            // Logic
+
+            // Load View
             return View("Edit", topic);
         }
 
         [HttpPost]
         public ActionResult Edit(Topic topic)
-        {
-            _uow.TopicRepository.Update(topic);
-            _uow.Commit();
+        {  // Logic
+            if (topic.IsValid())
+            {
+                // Repository Call
+                _uow.TopicRepository.Update(topic);
+                _uow.Commit();
+            }
 
+            // Information Load
             ViewBag.Subjects = GetSubjectsDropDown();
 
+            // Load View
             return View("Details", topic);
         }
 
         [Route("Topic/delete/{uid}")]
         public ActionResult Delete(Guid uid)
         {
+            // Logic
+            if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == uid))
+            {
+                foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == uid).Select(tta => tta.UID))
+                {
+                    _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                }
+            }
+
+            // Repository Call
             _uow.TopicRepository.Delete(uid);
             _uow.Commit();
 
+            // Load View
             return Index();
         }
 

@@ -6,6 +6,7 @@ namespace HomeworX.Models.Metadata
     {
         [StringLength(100)]
         [MinLength(3)]
+        [Required]
         [Display(Name = "Thema Titel")]
         public string Description { get; set; }
 

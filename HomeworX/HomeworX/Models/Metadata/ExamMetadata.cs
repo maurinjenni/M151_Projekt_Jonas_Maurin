@@ -11,6 +11,7 @@ namespace HomeworX.Models.Metadata
         public string Mailadress { get; set; }
 
         [Display(Name = "Errinerung")]
+        [Required]
         public bool Remind { get; set; }
 
         [Display(Name = "Errinerungsdatum")]

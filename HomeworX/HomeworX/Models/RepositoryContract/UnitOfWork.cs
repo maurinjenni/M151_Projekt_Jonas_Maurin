@@ -20,6 +20,7 @@ namespace HomeworX.Models.RepositoryContract
             HomeworkRepository = new HomeworkRepository(_context);
             SubjectRepository = new SubjectRepository(_context);
             TopicRepository = new TopicRepository(_context);
+            TopicToAppointmentRepository = new TopicToAppointmentRepository(_context);
         }
 
         public IExamRepository ExamRepository { get; set; }
@@ -29,6 +30,8 @@ namespace HomeworX.Models.RepositoryContract
         public ISubjectRepository SubjectRepository { get; set; }
 
         public ITopicRepository TopicRepository { get; set; }
+
+        public ITopicToAppointmentRepository TopicToAppointmentRepository { get; set; }
 
         public void Commit()
         {

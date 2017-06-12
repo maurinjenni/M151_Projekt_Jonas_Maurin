@@ -3,6 +3,7 @@ using HomeworX.Models.RepositoryContract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -20,61 +21,144 @@ namespace HomeworX.Controllers
         [Route("Subject/index")]
         public ActionResult Index()
         {
+            // Data Load
             var subjects = _uow.SubjectRepository.Get();
 
+            // Information Load
+
+            // Logic
+
+            // Load View
             return View("Index", subjects);
         }
 
         [Route("Subject/details/{uid}")]
         public ActionResult Details(Guid uid)
         {
+            // Data Load
             var subject = _uow.SubjectRepository.Get(uid);
 
+            // Information Load
+
+            // Logic
+
+            // Load View
             return View("Details", subject);
         }
 
         [Route("Subject/create")]
         public ActionResult Create()
         {
+            // Data Load
+
+            // Information Load
+
+            // Logic
+
+            // Load View
             return View("Create");
         }
 
         [HttpPost]
         public ActionResult Create(Subject subject)
         {
-            subject.UID = Guid.NewGuid();
+            // Logic
+            if (subject.IsValid())
+            {
+                subject.UID = Guid.NewGuid();
 
-            _uow.SubjectRepository.Insert(subject);
-            _uow.Commit();
+                // Repository Call
+                _uow.SubjectRepository.Insert(subject);
+                _uow.Commit();
+            }
+            else
+            {
+                return View("Create");
+            }
 
-            return View("Details", subject);
+            // Information Load
+
+            // Load View
+            return Details(subject.UID);
         }
         
         [Route("Subject/edit/{uid}")]
         public ActionResult Edit(Guid uid)
         {
+            // Data Load
             var subject = _uow.SubjectRepository.Get(uid);
 
+            // Information Load
+
+            // Logic
+
+            // Load View
             return View("Edit", subject);
         }
 
         [HttpPost]
         public ActionResult Edit(Subject subject)
         {
-            _uow.SubjectRepository.Update(subject);
-            _uow.Commit();
+            // Logic
+            if (subject.IsValid())
+            {
+                // Repository Call
+                _uow.SubjectRepository.Update(subject);
+                _uow.Commit();
+            }
+            else
+            {
+                return View("Edit", subject);
+            }
 
-            return View("Details", subject);
+            // Information Load
+
+            // Load View
+            return Details(subject.UID);
         }
 
         [Route("Subject/delete/{uid}")]
         public ActionResult Delete(Guid uid)
         {
-            _uow.TopicRepository.Delete(uid);
+            // Logic
+            if (_uow.TopicRepository.Get().Any(t => t.SubjectUID == uid))
+            {
+                foreach (Guid topicUID in _uow.TopicRepository.Get().Where(t => t.SubjectUID == uid).Select(t => t.UID))
+                {
+                    if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == topicUID))
+                    {
+                        foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == topicUID).Select(tta => tta.UID))
+                        {
+                            _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                        }
+                    }
+
+                    _uow.TopicRepository.Delete(topicUID);    
+                }
+            }
+
+            if (_uow.ExamRepository.Get().Any(e => e.Appointment.SubjectUID == uid))
+            {
+                foreach (Guid appointmentUID  in _uow.ExamRepository.Get().Where(e => e.Appointment.SubjectUID == uid).Select(e => e.Appointment.UID))
+                {
+                    if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.AppointmentUID == appointmentUID))
+                    {
+                        foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == appointmentUID).Select(tta => tta.UID))
+                        {
+                            _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                        }
+                    }
+
+                    _uow.ExamRepository.Delete(appointmentUID);
+                }
+            }
+
+            // Repository Call
+            _uow.SubjectRepository.Delete(uid);
             _uow.Commit();
 
+            // Load View
             return Index();
         }
-
     }
 }

@@ -5,13 +5,16 @@ using System.Web;
 
 namespace HomeworX.Models
 {
-    public partial class Exam 
+    public partial class Appointment
     {
-        public IEnumerable<Guid> Topics { get; set; }
-
         public bool IsValid()
         {
-            if (string.IsNullOrEmpty(Mailadress) && Time == null)
+            if (string.IsNullOrEmpty(Description) || Description.Length < 3 || Description.Length > 10)
+            {
+                return false;
+            }
+
+            if (TopicToAppointment == null)
             {
                 return false;
             }
