@@ -21,7 +21,7 @@ namespace HomeworX.Controllers
         public ActionResult Index()
         {
             // Data Load
-            var topics = _uow.TopicRepository.Get();
+            var topics = _uow.TopicRepository.Get(null,t => t.OrderBy(r => r.Subject.Detail).ThenBy(r => r.Description),string.Empty);
 
             // Information Load
 

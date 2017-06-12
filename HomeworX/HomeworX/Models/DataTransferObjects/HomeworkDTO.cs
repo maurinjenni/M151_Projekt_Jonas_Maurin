@@ -16,6 +16,11 @@ namespace HomeworX.Models
                 return false;
             }
 
+            if(Topics == null || !Topics.Any())
+            {
+                return false;
+            }
+
             return true;
         }
     }

@@ -20,7 +20,7 @@ namespace HomeworX.Controllers
         public ActionResult Index()
         {
             // Data Load
-            var exams = _uow.ExamRepository.Get(null,null, "Appointment");
+            var exams = _uow.ExamRepository.Get(null, t => t.OrderBy(r => r.Appointment.Date).ThenBy(r => r.Appointment.Description), "Appointment");
 
             // Information Load
 

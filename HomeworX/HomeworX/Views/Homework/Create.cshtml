@@ -33,30 +33,6 @@
 
     $(document).ready(function() {
         dropdowonchange();
-
-        var topics = @Html.Raw(
-                         Json.Encode(
-                             ((IEnumerable<Topic>)ViewBag.Topics).Select(topic => new
-                             {
-                                 UID = topic.UID,
-                                 SubjectUID = topic.SubjectUID,
-                                 Description = topic.Description
-                             })
-                             )
-                         );
-        console.log(topics);
-
-        var subjectUID = $("#SubjectDropDown").val();
-
-        console.log(subjectUID);
-
-        topics.forEach(function(topic) {
-            console.log(topic);
-            if (topic.SubjectUID == subjectUID) {
-                console.log("topic: " + topic.SubjectUID + "Subject: " + subjectUID);
-                $('#TopicListBox').append('<option value="' + topic.UID + '">' + topic.Description + '</option>');
-            }
-        });
     });
 </script>
 
@@ -99,7 +75,7 @@
             @Html.LabelFor(model => model.Appointment.SubjectUID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>)ViewBag.Subjects, new { @class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown" })
-                @Html.ValidationMessageFor(model => model.Appointment.Date, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Appointment.SubjectUID, "", new { @class = "text-danger" })
             </div>
         </div>
 

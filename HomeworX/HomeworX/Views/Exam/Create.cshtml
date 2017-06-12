@@ -99,7 +99,7 @@
             @Html.LabelFor(model => model.Appointment.SubjectUID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.Appointment.SubjectUID, (IEnumerable<SelectListItem>)ViewBag.Subjects, new { @class = "form-control", @onchange = "dropdowonchange()", @ID = "SubjectDropDown" })
-                @Html.ValidationMessageFor(model => model.Appointment.Date, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Appointment.SubjectUID, "", new { @class = "text-danger" })
             </div>
         </div>
 

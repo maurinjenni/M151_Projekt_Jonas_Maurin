@@ -9,9 +9,15 @@ namespace HomeworX.Models
     {
         public IEnumerable<Guid> Topics { get; set; }
 
+
         public bool IsValid()
         {
-            if (string.IsNullOrEmpty(Mailadress) && Time == null)
+            if (!string.IsNullOrEmpty(Mailadress) && Time == null)
+            {
+                return false;
+            }
+
+            if(Topics == null || !Topics.Any())
             {
                 return false;
             }

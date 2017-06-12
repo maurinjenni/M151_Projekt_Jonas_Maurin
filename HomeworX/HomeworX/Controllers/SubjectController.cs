@@ -2,6 +2,7 @@
 using HomeworX.Models.RepositoryContract;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -22,7 +23,7 @@ namespace HomeworX.Controllers
         public ActionResult Index()
         {
             // Data Load
-            var subjects = _uow.SubjectRepository.Get();
+            var subjects = _uow.SubjectRepository.Get(null, t => t.OrderBy(r => r.Description), string.Empty);
 
             // Information Load
 
@@ -150,6 +151,14 @@ namespace HomeworX.Controllers
                     }
 
                     _uow.ExamRepository.Delete(appointmentUID);
+                }
+            }
+
+            if(_uow.HomeworkRepository.Get().Any(h => h.Appointment.SubjectUID == uid))
+            {
+                foreach (Guid homeworkUID in _uow.HomeworkRepository.Get().Where(h => h.Appointment.SubjectUID == uid).Select(h => h.UID))
+                {
+                    _uow.HomeworkRepository.Delete(homeworkUID);
                 }
             }
 
