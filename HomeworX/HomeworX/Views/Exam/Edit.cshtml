@@ -7,7 +7,7 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Prüfungen</h2>
 
 <script>
     function dropdowonchange() {
@@ -71,7 +71,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Exam</h4>
+        <h4>Bearbeiten @Model.Appointment.Description</h4> 
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

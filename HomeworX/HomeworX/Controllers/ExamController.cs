@@ -165,6 +165,13 @@ namespace HomeworX.Controllers
         public ActionResult Delete(Guid uid)
         {
             // Logic
+            if(_uow.TopicToAppointmentRepository.Get().Any(tta => tta.AppointmentUID == uid))
+            {
+                foreach(Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Select(tta => tta.UID))
+                {
+                    _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                }
+            }
 
             // Repository Call
             _uow.ExamRepository.Delete(uid);
