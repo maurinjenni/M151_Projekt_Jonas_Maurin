@@ -63,9 +63,12 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Homework homework)
         {
+            var validationErrors = homework.Appointment.IsValid();
+            validationErrors.AddRange(homework.IsValid());
+
             // Logic
 
-            if (homework.Appointment.IsValid() && homework.IsValid())
+            if (!validationErrors.Any())
             {
                 homework.Appointment.UID = Guid.NewGuid();
                 homework.UID = homework.Appointment.UID;
@@ -91,6 +94,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return Create();
             }
 
@@ -122,8 +130,11 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Edit(Homework homework)
         {
+            var validationErrors = homework.Appointment.IsValid();
+            validationErrors.AddRange(homework.IsValid());
+
             // Logic
-            if (homework.Appointment.IsValid() && homework.IsValid())
+            if (!validationErrors.Any())
             {
                 homework.Appointment.TopicToAppointment = new List<TopicToAppointment>();
                 homework.Appointment.UID = homework.UID;
@@ -141,6 +152,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return Edit(homework.UID);
             }
 

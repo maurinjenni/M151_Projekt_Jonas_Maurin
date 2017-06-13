@@ -9,19 +9,42 @@ namespace HomeworX.Models
     {
         public IEnumerable<Guid> Topics { get; set; }
 
-        public bool IsValid()
+        public List<KeyValuePair<string, string>> IsValid()
         {
-            if (Importance != null && (Importance < 0 || Importance > 255))
+            if ((Importance != null && (Importance < 0 || Importance > 255)) || (Topics == null || !Topics.Any()))
             {
-                return false;
-            }
+                List<KeyValuePair<string, string>> validationErrors = new List<KeyValuePair<string, string>>();
 
-            if(Topics == null || !Topics.Any())
-            {
-                return false;
-            }
+                if (Importance != null)
+                {
+                    validationErrors.Add(new KeyValuePair<string, string>("model.Importance",
+                        "Das Feld Importance muss einen Wert haben"));
+                }
 
-            return true;
+                else if (Importance < 0)
+                {
+                    validationErrors.Add(new KeyValuePair<string, string>("model.Importance",
+                        "Das Feld Importance darf nicht negativ sein"));
+                }
+
+
+                else if (Importance > 255)
+                {
+                    validationErrors.Add(new KeyValuePair<string, string>("model.Importance",
+                        "Das Feld Importance darf nicht grösser 255 sein"));
+                }
+
+
+                if (Topics == null || !Topics.Any())
+                {
+                    validationErrors.Add(new KeyValuePair<string, string>("model.Topics",
+                        "Das Feld Topics muss einen Wert haben"));
+                }
+
+                 return validationErrors;
+            }
+            
+            return null;
         }
     }
 }

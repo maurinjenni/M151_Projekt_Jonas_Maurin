@@ -64,13 +64,17 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Exam exam)
         {
+            var validationErrors = exam.Appointment.IsValid();
+            validationErrors.AddRange(exam.IsValid());
+
+
             // Logic
             if (!string.IsNullOrEmpty(exam.Mailadress) || exam.Time != null)
             {
                 exam.Remind = true;
             }
 
-            if (exam.Appointment.IsValid() && exam.IsValid())
+            if (!validationErrors.Any())
             {
                 exam.Appointment.UID = Guid.NewGuid();
                 exam.UID = exam.Appointment.UID;
@@ -96,6 +100,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return Create();
             }
 
@@ -127,12 +136,15 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Edit(Exam exam)
         {
+            var validationErrors = exam.Appointment.IsValid();
+            validationErrors.AddRange(exam.IsValid());
+
             if (!string.IsNullOrEmpty(exam.Mailadress) || exam.Time != null)
             {
                 exam.Remind = true;
             }
 
-            if (exam.Appointment.IsValid() && exam.IsValid())
+            if (!validationErrors.Any())
             {
                 // Logic
                 exam.Appointment.TopicToAppointment = new List<TopicToAppointment>();
@@ -150,6 +162,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return Edit(exam.UID);
             }
 

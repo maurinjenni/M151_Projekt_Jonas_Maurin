@@ -63,8 +63,10 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Subject subject)
         {
+            var validationErrors = subject.IsValid();
+
             // Logic
-            if (subject.IsValid())
+            if (!validationErrors.Any())
             {
                 subject.UID = Guid.NewGuid();
 
@@ -74,6 +76,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return View("Create");
             }
 
@@ -101,7 +108,7 @@ namespace HomeworX.Controllers
         public ActionResult Edit(Subject subject)
         {
             // Logic
-            if (subject.IsValid())
+            if (!subject.IsValid().Any())
             {
                 // Repository Call
                 _uow.SubjectRepository.Update(subject);

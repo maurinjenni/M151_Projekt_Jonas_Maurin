@@ -63,8 +63,10 @@ namespace HomeworX.Controllers
         [HttpPost]
         public ActionResult Create(Topic topic)
         {
+            var validationErrors = topic.IsValid();
+
             // Logic
-            if (topic.IsValid())
+            if (!validationErrors.Any())
             {
                 topic.UID = Guid.NewGuid();
 
@@ -74,6 +76,11 @@ namespace HomeworX.Controllers
             }
             else
             {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
                 return View("Create");
             }
 
@@ -101,12 +108,23 @@ namespace HomeworX.Controllers
 
         [HttpPost]
         public ActionResult Edit(Topic topic)
-        {  // Logic
-            if (topic.IsValid())
+        {
+            var validationErrors = topic.IsValid();
+            // Logic
+            if (!validationErrors.Any())
             {
                 // Repository Call
                 _uow.TopicRepository.Update(topic);
                 _uow.Commit();
+            }
+            else
+            {
+                foreach (var error in validationErrors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
+                return Edit(topic.UID);
             }
 
             // Information Load
