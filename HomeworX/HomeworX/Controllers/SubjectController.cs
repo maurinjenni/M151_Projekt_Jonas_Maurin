@@ -126,46 +126,76 @@ namespace HomeworX.Controllers
         }
 
         [Route("Subject/delete/{uid}")]
-        public ActionResult Delete(Guid uid)
+        public ActionResult Delete(Guid uid, bool deleteConfirmed)
         {
             // Logic
-            if (_uow.TopicRepository.Get().Any(t => t.SubjectUID == uid))
+            if ((_uow.TopicRepository.Get().Any(t => t.SubjectUID == uid) ||
+                _uow.ExamRepository.Get().Any(e => e.Appointment.SubjectUID == uid) ||
+                _uow.HomeworkRepository.Get().Any(h => h.Appointment.SubjectUID == uid)) && !deleteConfirmed)
             {
-                foreach (Guid topicUID in _uow.TopicRepository.Get().Where(t => t.SubjectUID == uid).Select(t => t.UID))
-                {
-                    if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == topicUID))
-                    {
-                        foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == topicUID).Select(tta => tta.UID))
-                        {
-                            _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
-                        }
-                    }
+                ViewBag.DeleteConfimed = false;
 
-                    _uow.TopicRepository.Delete(topicUID);    
-                }
+                var exams = _uow.ExamRepository.Get(e => e.Appointment.SubjectUID == uid,null,"Appointment");
+                ViewBag.Exams = exams;
+
+                var homeworks = _uow.HomeworkRepository.Get(e => e.Appointment.SubjectUID == uid, null, "Appointment");
+                ViewBag.Homeworks = homeworks;
+
+                Subject deletableSubject = _uow.SubjectRepository.Get(uid);
+
+                return View("DeleteConfirmation", deletableSubject);
             }
-
-            if (_uow.ExamRepository.Get().Any(e => e.Appointment.SubjectUID == uid))
+            else if(deleteConfirmed)
             {
-                foreach (Guid appointmentUID  in _uow.ExamRepository.Get().Where(e => e.Appointment.SubjectUID == uid).Select(e => e.Appointment.UID))
+                if (_uow.TopicRepository.Get().Any(t => t.SubjectUID == uid))
                 {
-                    if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.AppointmentUID == appointmentUID))
+                    foreach (Guid topicUID in _uow.TopicRepository.Get().Where(t => t.SubjectUID == uid).Select(t => t.UID))
                     {
-                        foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == appointmentUID).Select(tta => tta.UID))
+                        if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == topicUID))
                         {
-                            _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                            foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == topicUID).Select(tta => tta.UID))
+                            {
+                                _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                            }
                         }
+
+                        _uow.TopicRepository.Delete(topicUID);
                     }
-
-                    _uow.ExamRepository.Delete(appointmentUID);
                 }
-            }
 
-            if(_uow.HomeworkRepository.Get().Any(h => h.Appointment.SubjectUID == uid))
-            {
-                foreach (Guid homeworkUID in _uow.HomeworkRepository.Get().Where(h => h.Appointment.SubjectUID == uid).Select(h => h.UID))
+                if (_uow.ExamRepository.Get().Any(e => e.Appointment.SubjectUID == uid))
                 {
-                    _uow.HomeworkRepository.Delete(homeworkUID);
+                    foreach (Guid appointmentUID in _uow.ExamRepository.Get().Where(e => e.Appointment.SubjectUID == uid).Select(e => e.Appointment.UID))
+                    {
+                        if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.AppointmentUID == appointmentUID))
+                        {
+                            foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == appointmentUID).Select(tta => tta.UID))
+                            {
+                                _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                            }
+                        }
+
+                        _uow.ExamRepository.Delete(appointmentUID);
+                    }
+                }
+
+                if (_uow.HomeworkRepository.Get().Any(h => h.Appointment.SubjectUID == uid))
+                {
+                    foreach (Guid appointmentUID in _uow.HomeworkRepository.Get().Where(h => h.Appointment.SubjectUID == uid).Select(h => h.Appointment.UID))
+                    {
+                        if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.AppointmentUID == appointmentUID))
+                        {
+                            foreach (
+                                Guid topicToAppointmentUID in
+                                _uow.TopicToAppointmentRepository.Get()
+                                    .Where(tta => tta.TopicUID == appointmentUID)
+                                    .Select(tta => tta.UID))
+                            {
+                                _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                            }
+                        }
+                        _uow.HomeworkRepository.Delete(appointmentUID);
+                    }
                 }
             }
 

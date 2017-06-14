@@ -1,12 +1,12 @@
-﻿function toggle(id) {
+﻿function toggle(id,openText,closedText) {
     var e = document.getElementById(id);
     var button = document.getElementById('aufklappButton');
 
     if (e.style.display == "none") {
         e.style.display = "";
-        button.innerHTML = "Zuklappen";
+        button.innerHTML = openText;
     } else {
         e.style.display = "none";
-        button.innerHTML = "Errinnerung";
+        button.innerHTML = closedText;
     }
 }

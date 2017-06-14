@@ -1,0 +1,149 @@
+﻿@using HomeworX.Models
+@model HomeworX.Models.Subject
+
+@{
+    ViewBag.Title = "DeleteConfirmation";
+}
+
+<h2>Fach</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-12">
+        <h4>Löschbestätigung</h4>
+        
+        <div class="col-md-12 container">
+            <p class="col-md-12">Das Fach @Model.Description hat mehrere Abhängigkeiten auf Themen, Hausaufgaben oder Prüfungen. Wenn sie das Fach löschen, werden alle Abhangigkeiten automatisch mitgelöscht. Möchten sie mit dem Löschen fortfahren?</p>
+        </div>
+        
+        <div class="col-md-12 container">
+            <div class="col-md-1">
+                @Html.ActionLink("Zurück", "Index","Subject" ,null, new { @class = "btn btn-default btn-block" })
+            </div>
+            
+            <div class="col-md-1">
+                @Html.ActionLink("Löschen", "Delete", "Subject", new {uid = Model.UID, deleteConfirmed = true}, new { @class = "btn btn-default btn-block btn-danger" })
+            </div>
+        </div>
+        
+        <div class="col-md-12" style="height: 10px">
+            
+        </div>
+
+        <div class="col-md-12 container">
+            <div class="col-md-1">
+                <a href="javascript:toggle('DependencyContainer','Zuklappen','Abhängigkeiten')" id="aufklappButton" class="btn btn-default btn-block">Abhängigkeiten</a>
+            </div>
+        </div>
+        
+        <div class="col-md-12 container" id="DependencyContainer" style="display: none">
+            <div class="col-md-12">
+                <h5>Themen</h5>
+                <ul class="list-group col-md-12">
+                    <li class="list-group-item active">
+                        <div class="container">
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(model => model.Topic.First().Description)
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.DisplayNameFor(model => model.Topic.First().Detail)
+                            </div>
+                        </div>
+                    </li>
+
+                    @foreach (var item in Model.Topic)
+                    {
+                        <li class="list-group-item">
+                            <div class="container">
+                                <div class="col-md-3">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </div>
+
+                                <div class="col-md-3">
+                                    @Html.DisplayFor(modelItem => item.Detail)
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                @{
+                    Homework homeworkitem = ((List<Homework>)ViewBag.Homeworks) != null && ((List<Homework>)ViewBag.Homeworks).Any() ? ((List<Homework>)ViewBag.Homeworks).First() : null;
+                    Exam examItem = ((List<Exam>)ViewBag.Exams) != null && ((List<Exam>)ViewBag.Exams).Any() ? ((List<Exam>)ViewBag.Exams).First() : null;
+                }
+                @{
+                    if (homeworkitem != null)
+                    {
+                        <h5>Hausaufgaben</h5>
+                        <ul class="list-group col-md-12">
+
+                            <li class="list-group-item active">
+                                <div class="container">
+                                    <div class="col-md-3">
+                                        @Html.DisplayNameFor(model => homeworkitem.Appointment.Description)
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @Html.DisplayNameFor(model => homeworkitem.Appointment.Date)
+                                    </div>
+                                </div>
+                            </li>
+
+                            @foreach (var item in (List<Homework>)ViewBag.Homeworks)
+                            {
+                                <li class="list-group-item">
+                                    <div class="container">
+                                        <div class="col-md-3">
+                                            @Html.DisplayFor(modelItem => item.Appointment.Description)
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.DisplayFor(modelItem => item.Appointment.Date)
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                    if (examItem != null)
+                    {
+                        <h5>Prüfungen</h5>
+                        <ul class="list-group col-md-12">
+                            <li class="list-group-item active">
+                                <div class="container">
+                                    <div class="col-md-3">
+                                        @Html.DisplayNameFor(model => examItem.Appointment.Description)
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @Html.DisplayNameFor(model => examItem.Appointment.Date)
+                                    </div>
+                                </div>
+                            </li>
+
+                            @foreach (var item in (List<Exam>)ViewBag.Exams)
+                            {
+                                <li class="list-group-item">
+                                    <div class="container">
+                                        <div class="col-md-3">
+                                            @Html.DisplayFor(modelItem => item.Appointment.Description)
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.DisplayFor(modelItem => item.Appointment.Date)
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+

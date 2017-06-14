@@ -135,14 +135,49 @@ namespace HomeworX.Controllers
         }
 
         [Route("Topic/delete/{uid}")]
-        public ActionResult Delete(Guid uid)
+        public ActionResult Delete(Guid uid, bool deleteConfirmed)
         {
             // Logic
-            if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == uid))
+            if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == uid) && !deleteConfirmed)
             {
-                foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == uid).Select(tta => tta.UID))
+                ViewBag.DeleteConfirmed = false;
+
+                IEnumerable<Guid> topicToAppointments =
+                    (_uow.TopicToAppointmentRepository.Get(e => e.TopicUID == uid).Select(tta => tta.AppointmentUID)).Distinct();
+                
+                List<Exam> exams = new List<Exam>();
+                List<Homework> homeworks = new List<Homework>();
+
+                foreach (Guid ttaUID in topicToAppointments)
                 {
-                    _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                    var ex = _uow.ExamRepository.Get(ttaUID);
+
+                    if (ex != null)
+                    {
+                        exams.Add(ex);
+                    }
+                    else
+                    {
+                        homeworks.Add(_uow.HomeworkRepository.Get(ttaUID) != null ? _uow.HomeworkRepository.Get(ttaUID) : null);
+                    }
+                }
+
+
+                ViewBag.Homeworks = homeworks;
+                ViewBag.Exams = exams;
+
+                Topic deletableTopic = _uow.TopicRepository.Get(uid);
+
+                return View("DeleteConfirmation", deletableTopic);
+            }
+            else if (deleteConfirmed)
+            {
+                if (_uow.TopicToAppointmentRepository.Get().Any(tta => tta.TopicUID == uid))
+                {
+                    foreach (Guid topicToAppointmentUID in _uow.TopicToAppointmentRepository.Get().Where(tta => tta.TopicUID == uid).Select(tta => tta.UID))
+                    {
+                        _uow.TopicToAppointmentRepository.Delete(topicToAppointmentUID);
+                    }
                 }
             }
 
